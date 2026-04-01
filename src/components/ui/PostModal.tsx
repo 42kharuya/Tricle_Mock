@@ -41,15 +41,10 @@ const PostModal = ({ isOpen, onClose, defaultTopicId }: Props) => {
         role="dialog"
         aria-modal="true"
         aria-label="投稿"
-        className="fixed bottom-0 left-1/2 z-50 w-full max-w-sm -translate-x-1/2 rounded-t-2xl bg-zinc-900 shadow-xl"
+        className="fixed left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-zinc-900 shadow-xl"
       >
-        {/* ドラッグハンドル */}
-        <div className="flex justify-center pt-3 pb-1">
-          <span className="h-1 w-10 rounded-full bg-zinc-700" />
-        </div>
-
         {/* ヘッダー */}
-        <div className="flex items-center justify-between px-4 py-3">
+        <div className="flex items-center justify-between px-4 pt-4 pb-2">
           <h2 className="text-base font-bold text-zinc-100">投稿する</h2>
           <button
             type="button"
@@ -61,7 +56,7 @@ const PostModal = ({ isOpen, onClose, defaultTopicId }: Props) => {
           </button>
         </div>
 
-        <div className="px-4 pb-8 flex flex-col gap-4">
+        <div className="px-4 pb-6 flex flex-col gap-4">
           {/* トピック選択 */}
           <div className="flex flex-col gap-1.5">
             <label
