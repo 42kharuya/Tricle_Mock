@@ -61,7 +61,7 @@ const ActivityCard = ({
   return (
     <article
       className={cn(
-        "flex flex-col gap-3 rounded-2xl bg-zinc-800/60 p-4 transition-colors hover:bg-zinc-800",
+        "flex flex-col gap-3 rounded-2xl bg-zinc-800/60 p-4 transition hover:bg-zinc-800 hover:scale-[1.01] active:scale-[0.99]",
         className,
       )}
     >

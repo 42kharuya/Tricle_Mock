@@ -14,11 +14,12 @@ type Props = {
  * ui/ActivityCard にトピック情報を解決して渡すラッパー。
  */
 const ActivityCard = ({ activity, topic, user }: Props) => {
+  const topicTitle = [topic.emoji, topic.title].filter(Boolean).join(" ");
   return (
     <UIActivityCard
       activity={activity}
       user={user}
-      topicTitle={topic.title}
+      topicTitle={topicTitle}
       topicId={topic.id}
     />
   );

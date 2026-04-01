@@ -21,6 +21,7 @@ const TopicActivityFeed = ({ topic }: TopicActivityFeedProps) => {
 
   // ユーザーを O(1) で引けるようにマップ化
   const userMap = new Map(users.map((u) => [u.id, u]));
+  const topicTitle = [topic.emoji, topic.title].filter(Boolean).join(" ");
 
   if (topicActivities.length === 0) {
     return (
@@ -40,7 +41,7 @@ const TopicActivityFeed = ({ topic }: TopicActivityFeedProps) => {
             <UIActivityCard
               activity={activity}
               user={user}
-              topicTitle={topic.title}
+              topicTitle={topicTitle}
               topicId={topic.id}
             />
           </li>
