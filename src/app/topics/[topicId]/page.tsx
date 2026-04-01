@@ -3,6 +3,10 @@ import Link from "next/link";
 import { topics } from "@/mocks/topics";
 import TopicHeader from "@/components/topic/TopicHeader";
 import TopicActivityFeed from "@/components/topic/TopicActivityFeed";
+import FAB from "@/components/ui/FAB";
+
+// モックのログインユーザーID
+const MY_USER_ID = "user-1";
 
 type Props = {
   params: Promise<{ topicId: string }>;
@@ -56,6 +60,11 @@ const TopicDetailPage = async ({ params }: Props) => {
           <TopicActivityFeed topic={topic} />
         </section>
       </main>
+
+      {/* 自分のトピックのみ投稿FABを表示 */}
+      {topic.userId === MY_USER_ID && (
+        <FAB defaultTopicId={topic.id} />
+      )}
     </div>
   );
 };

@@ -1,0 +1,142 @@
+"use client";
+
+import { useState } from "react";
+import { X, ChevronDown } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { topics } from "@/mocks/topics";
+
+// ログインユーザー（モック）
+const MY_USER_ID = "user-1";
+
+type Props = {
+  isOpen: boolean;
+  onClose: () => void;
+  /** モーダルを開いた時点で選択済みにするトピックID（省略可） */
+  defaultTopicId?: string;
+};
+
+const PostModal = ({ isOpen, onClose, defaultTopicId }: Props) => {
+  const myTopics = topics.filter((t) => t.userId === MY_USER_ID);
+  const [selectedTopicId, setSelectedTopicId] = useState<string>(
+    defaultTopicId ?? myTopics[0]?.id ?? "",
+  );
+  const [text, setText] = useState("");
+  const MAX_LENGTH = 5000;
+
+  const selectedTopic = myTopics.find((t) => t.id === selectedTopicId);
+
+  if (!isOpen) return null;
+
+  return (
+    <>
+      {/* オーバーレイ */}
+      <div
+        className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+
+      {/* モーダルパネル */}
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="投稿"
+        className="fixed left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-zinc-900 shadow-xl"
+      >
+        {/* ヘッダー */}
+        <div className="flex items-center justify-between px-4 pt-4 pb-2">
+          <h2 className="text-base font-bold text-zinc-100">投稿する</h2>
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex h-8 w-8 items-center justify-center rounded-full text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-zinc-100"
+            aria-label="閉じる"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        <div className="px-4 pb-6 flex flex-col gap-4">
+          {/* トピック選択 */}
+          <div className="flex flex-col gap-1.5">
+            <label
+              htmlFor="topic-select"
+              className="text-xs font-medium text-zinc-400"
+            >
+              トピック
+            </label>
+            <div className="relative">
+              <select
+                id="topic-select"
+                value={selectedTopicId}
+                onChange={(e) => setSelectedTopicId(e.target.value)}
+                className={cn(
+                  "w-full appearance-none rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2.5 pr-10",
+                  "text-sm text-zinc-100 outline-none transition-colors",
+                  "focus:border-violet-500 focus:ring-1 focus:ring-violet-500/50",
+                )}
+              >
+                {myTopics.map((topic) => (
+                  <option key={topic.id} value={topic.id}>
+                    {topic.emoji ? `${topic.emoji} ${topic.title}` : topic.title}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown
+                size={16}
+                className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400"
+              />
+            </div>
+            {selectedTopic?.description && (
+              <p className="text-xs text-zinc-500 leading-relaxed">
+                {selectedTopic.description}
+              </p>
+            )}
+          </div>
+
+          {/* テキストエリア */}
+          <div className="flex flex-col gap-1.5">
+            <label
+              htmlFor="post-text"
+              className="text-xs font-medium text-zinc-400"
+            >
+              内容
+            </label>
+            <textarea
+              id="post-text"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              maxLength={MAX_LENGTH}
+              rows={5}
+              placeholder="気軽に書き留めてみましょう…"
+              className={cn(
+                "w-full resize-none rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-3",
+                "text-sm text-zinc-100 placeholder:text-zinc-600 outline-none transition-colors",
+                "focus:border-violet-500 focus:ring-1 focus:ring-violet-500/50",
+              )}
+            />
+            <p className="text-right text-xs text-zinc-600">
+              {text.length} / {MAX_LENGTH.toLocaleString()}
+            </p>
+          </div>
+
+          {/* 投稿ボタン（モック：押しても何もしない） */}
+          <button
+            type="button"
+            disabled={text.trim().length === 0}
+            className={cn(
+              "w-full rounded-xl py-3 text-sm font-bold transition-colors",
+              text.trim().length > 0
+                ? "bg-violet-600 text-white hover:bg-violet-500 active:bg-violet-700"
+                : "bg-zinc-800 text-zinc-600 cursor-not-allowed",
+            )}
+          >
+            投稿する
+          </button>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default PostModal;
