@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html
       lang="ja"
-      className={`${geistSans.variable} h-full antialiased dark`}
+      className={`${geistSans.variable} h-full antialiased dark scroll-smooth`}
     >
       <body className="min-h-full bg-zinc-950 text-zinc-100">
         {/* スマホ幅に固定してモバイルアプリらしいレイアウトに */}
