@@ -1,5 +1,6 @@
 import SubscriptionFeed from "@/components/subscriptions/SubscriptionFeed";
 import { subscribedTopicIds } from "@/mocks/subscriptions";
+import FAB from "@/components/ui/FAB";
 
 export default function SubscriptionsPage() {
   return (
@@ -17,6 +18,8 @@ export default function SubscriptionsPage() {
       <main className="px-4 py-4">
         <SubscriptionFeed />
       </main>
+
+      <FAB />
     </div>
   );
 }

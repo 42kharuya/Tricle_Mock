@@ -1,4 +1,5 @@
 import ActivityFeed from "@/components/home/ActivityFeed";
+import FAB from "@/components/ui/FAB";
 
 export default function Home() {
   return (
@@ -11,6 +12,8 @@ export default function Home() {
       <main className="px-4 py-4">
         <ActivityFeed />
       </main>
+
+      <FAB />
     </div>
   );
 }
