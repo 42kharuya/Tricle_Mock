@@ -1,12 +1,18 @@
 "use client";
 
-import { useState } from "react";
-import { X, ChevronDown } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { X, ChevronDown, ImagePlus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { topics } from "@/mocks/topics";
 
 // ログインユーザー（モック）
 const MY_USER_ID = "user-1";
+const MAX_IMAGES = 4;
+
+type AttachedImage = {
+  file: File;
+  objectUrl: string;
+};
 
 type Props = {
   isOpen: boolean;
@@ -21,9 +27,50 @@ const PostModal = ({ isOpen, onClose, defaultTopicId }: Props) => {
     defaultTopicId ?? myTopics[0]?.id ?? "",
   );
   const [text, setText] = useState("");
+  const [images, setImages] = useState<AttachedImage[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const MAX_LENGTH = 5000;
 
   const selectedTopic = myTopics.find((t) => t.id === selectedTopicId);
+
+  // モーダルが閉じたら画像をリセット・objectURL を解放
+  useEffect(() => {
+    if (!isOpen) {
+      setImages((prev) => {
+        prev.forEach((img) => URL.revokeObjectURL(img.objectUrl));
+        return [];
+      });
+      setText("");
+    }
+  }, [isOpen]);
+
+  // アンマウント時の残存 objectURL クリーンアップ
+  useEffect(() => {
+    return () => {
+      images.forEach((img) => URL.revokeObjectURL(img.objectUrl));
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    const remaining = MAX_IMAGES - images.length;
+    const toAdd = files.slice(0, remaining);
+    const newImages: AttachedImage[] = toAdd.map((file) => ({
+      file,
+      objectUrl: URL.createObjectURL(file),
+    }));
+    setImages((prev) => [...prev, ...newImages]);
+    // 同じファイルを再選択できるようにリセット
+    e.target.value = "";
+  };
+
+  const handleRemoveImage = (index: number) => {
+    setImages((prev) => {
+      URL.revokeObjectURL(prev[index].objectUrl);
+      return prev.filter((_, i) => i !== index);
+    });
+  };
 
   if (!isOpen) return null;
 
@@ -118,6 +165,57 @@ const PostModal = ({ isOpen, onClose, defaultTopicId }: Props) => {
             <p className="text-right text-xs text-zinc-600">
               {text.length} / {MAX_LENGTH.toLocaleString()}
             </p>
+          </div>
+
+          {/* 画像添付エリア */}
+          <div className="flex flex-col gap-2">
+            {/* hidden file input */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              className="hidden"
+              onChange={handleFileChange}
+            />
+            {/* 添付ボタン */}
+            <button
+              type="button"
+              disabled={images.length >= MAX_IMAGES}
+              onClick={() => fileInputRef.current?.click()}
+              className={cn(
+                "flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm transition-colors w-fit",
+                images.length >= MAX_IMAGES
+                  ? "cursor-not-allowed text-zinc-600"
+                  : "text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100",
+              )}
+            >
+              <ImagePlus size={16} />
+              写真を追加
+            </button>
+            {/* サムネイルプレビュー */}
+            {images.length > 0 && (
+              <div className="grid grid-cols-2 gap-2">
+                {images.map((img, index) => (
+                  <div key={img.objectUrl} className="relative aspect-square">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={img.objectUrl}
+                      alt={`添付画像${index + 1}`}
+                      className="h-full w-full rounded-lg object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage(index)}
+                      className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-black/70 text-white transition-colors hover:bg-black"
+                      aria-label={`画像${index + 1}を削除`}
+                    >
+                      <X size={12} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* 投稿ボタン（モック：押しても何もしない） */}
