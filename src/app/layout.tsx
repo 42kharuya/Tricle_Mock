@@ -10,8 +10,8 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Tricle_Mock",
-  description: "アクティビティ記録サービス Tricle のモック",
+  title: "MultiFace",
+  description: "フェイス（多面性）で記録する SNS",
 };
 
 export default function RootLayout({
