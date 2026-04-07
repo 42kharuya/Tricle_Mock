@@ -14,6 +14,8 @@ export type FaceRepository = {
   findById: (faceId: string) => Face | undefined;
   /** フェイスを作成（モック実装はダミー返却） */
   create: (userId: string, input: CreateFaceInput) => Face;
+  /** 全フェイス一覧を取得（検索用） */
+  listAll: () => Face[];
 };
 
 // ─── モック実装 ────────────────────────────────────────────────
@@ -35,5 +37,9 @@ export const faceRepository: FaceRepository = {
       ...input,
     };
     return newFace;
+  },
+
+  listAll: () => {
+    return faces;
   },
 };

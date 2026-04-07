@@ -1,32 +1,37 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { activities } from "@/mocks/activities";
-import { topics } from "@/mocks/topics";
-import { users, currentUser } from "@/mocks/users";
-import { subscribedFaceIds } from "@/mocks/subscriptions";
+import { activityRepository } from "@/repositories/activity-repository";
+import { faceRepository } from "@/repositories/face-repository";
+import { userRepository } from "@/repositories/user-repository";
+import { subscriptionRepository } from "@/repositories/subscription-repository";
 import SearchBar from "@/components/search/SearchBar";
 import SearchScopeSelector, {
   type SearchScope,
 } from "@/components/search/SearchScopeSelector";
 import SearchResults from "@/components/search/SearchResults";
 
-// O(1) 参照用マップ
-const topicMap = new Map(topics.map((t) => [t.id, t]));
-const userMap = new Map(users.map((u) => [u.id, u]));
+// O(1) 参照用マップ（モジュールレベルで1回だけ構築）
+const allFaces = faceRepository.listAll();
+const faceMap = new Map(allFaces.map((f) => [f.id, f]));
+const userMap = new Map(userRepository.listAll().map((u) => [u.id, u]));
 
 export default function SearchPage() {
   const [query, setQuery] = useState("");
   const [scope, setScope] = useState<SearchScope>("all");
 
-  const results = useMemo(() => {
+  const currentUser = userRepository.getCurrentUser();
+  const subscribedFaceIds = subscriptionRepository.getSubscribedFaceIds();
+
+  const activityResults = useMemo(() => {
     const trimmed = query.trim();
     if (!trimmed) return [];
 
     const lowerQuery = trimmed.toLowerCase();
 
     // ① スコープでフィルタ
-    const scopedActivities = activities.filter((a) => {
+    const allActivities = activityRepository.listAll();
+    const scopedActivities = allActivities.filter((a) => {
       if (scope === "mine") return a.userId === currentUser.id;
       if (scope === "subscribed") return subscribedFaceIds.includes(a.faceId);
       return true; // "all"
@@ -37,20 +42,27 @@ export default function SearchPage() {
       a.body.toLowerCase().includes(lowerQuery),
     );
 
-    // ③ 新しい順にソート
-    matched.sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    );
-
-    // ④ user / topic を解決して返す
+    // ③ user / face を解決して返す（null は除外）
     return matched.flatMap((activity) => {
       const user = userMap.get(activity.userId);
-      const topic = topicMap.get(activity.faceId);
-      if (!user || !topic) return [];
-      return [{ activity, user, topic }];
+      const face = faceMap.get(activity.faceId);
+      if (!user || !face) return [];
+      return [{ activity, user, face }];
     });
-  }, [query, scope]);
+  }, [query, scope, currentUser.id, subscribedFaceIds]);
+
+  const faceResults = useMemo(() => {
+    const trimmed = query.trim();
+    if (!trimmed) return [];
+
+    const lowerQuery = trimmed.toLowerCase();
+
+    return allFaces.filter(
+      (f) =>
+        f.name.toLowerCase().includes(lowerQuery) ||
+        (f.description ?? "").toLowerCase().includes(lowerQuery),
+    );
+  }, [query]);
 
   return (
     <div className="flex flex-col">
@@ -64,7 +76,12 @@ export default function SearchPage() {
       </header>
 
       <main className="px-4 py-4">
-        <SearchResults query={query.trim()} results={results} />
+        <SearchResults
+          query={query.trim()}
+          activityResults={activityResults}
+          faceResults={faceResults}
+          subscribedFaceIds={subscribedFaceIds}
+        />
       </main>
     </div>
   );
