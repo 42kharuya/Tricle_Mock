@@ -1,4 +1,5 @@
-import HomeTabs from "@/components/home/HomeTabs";
+import HomeProfile from "@/components/home/HomeProfile";
+import HomeClient from "@/components/home/HomeClient";
 import FAB from "@/components/ui/FAB";
 
 export default function Home() {
@@ -10,7 +11,11 @@ export default function Home() {
       </header>
 
       <main>
-        <HomeTabs />
+        {/* 上部: プロフィールエリア（Server Component） */}
+        <HomeProfile />
+
+        {/* 中部〜下部: フェイスフィルタ + アクティビティフィード（Client Component） */}
+        <HomeClient />
       </main>
 
       <FAB />
