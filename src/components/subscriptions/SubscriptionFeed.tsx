@@ -59,8 +59,8 @@ const SubscriptionFeed = () => {
             <ActivityCard
               activity={activity}
               user={user}
-              topicTitle={`${face.emoji ?? ""} ${face.name}`.trim()}
-              topicId={face.id}
+              faceTitle={`${face.emoji ?? ""} ${face.name}`.trim()}
+              faceId={face.id}
             />
           </li>
         );

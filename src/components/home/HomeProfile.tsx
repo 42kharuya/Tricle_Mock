@@ -3,7 +3,7 @@ import { faceRepository } from "@/repositories/face-repository";
 import { activityRepository } from "@/repositories/activity-repository";
 import Avatar from "@/components/ui/Avatar";
 import Badge from "@/components/ui/Badge";
-import ActivityTileCalendar from "@/components/profile/ActivityTileCalendar";
+import ActivityTileCalendar from "./ActivityTileCalendar";
 
 /**
  * ホーム上部のプロフィールエリア（Server Component）。

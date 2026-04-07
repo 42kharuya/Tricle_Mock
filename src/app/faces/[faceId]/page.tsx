@@ -63,7 +63,7 @@ const FaceDetailPage = async ({ params }: Props) => {
 
       {/* 自分のフェイスのみ投稿FABを表示 */}
       {face.userId === currentUser.id && (
-        <FAB defaultTopicId={face.id} />
+        <FAB defaultFaceId={face.id} />
       )}
     </div>
   );

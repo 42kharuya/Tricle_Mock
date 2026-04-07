@@ -3,7 +3,7 @@ import { type Face } from "@/types/face";
 // user-1（山田 太郎）のフェイス
 const user1Faces: Face[] = [
   {
-    id: "topic-1-1",
+    id: "face-1-1",
     userId: "user-1",
     name: "読書",
     emoji: "📚",
@@ -12,7 +12,7 @@ const user1Faces: Face[] = [
     isPrivate: false,
   },
   {
-    id: "topic-1-2",
+    id: "face-1-2",
     userId: "user-1",
     name: "映画",
     emoji: "🎬",
@@ -21,7 +21,7 @@ const user1Faces: Face[] = [
     isPrivate: false,
   },
   {
-    id: "topic-1-3",
+    id: "face-1-3",
     userId: "user-1",
     name: "料理日記",
     emoji: "🍳",
@@ -30,7 +30,7 @@ const user1Faces: Face[] = [
     isPrivate: false,
   },
   {
-    id: "topic-1-4",
+    id: "face-1-4",
     userId: "user-1",
     name: "今日の出来事",
     emoji: "📝",
@@ -43,7 +43,7 @@ const user1Faces: Face[] = [
 // user-2（佐藤 花子）のフェイス
 const user2Faces: Face[] = [
   {
-    id: "topic-2-1",
+    id: "face-2-1",
     userId: "user-2",
     name: "読んだ本",
     emoji: "📖",
@@ -52,7 +52,7 @@ const user2Faces: Face[] = [
     isPrivate: false,
   },
   {
-    id: "topic-2-2",
+    id: "face-2-2",
     userId: "user-2",
     name: "カフェ巡り",
     emoji: "☕",
@@ -61,7 +61,7 @@ const user2Faces: Face[] = [
     isPrivate: false,
   },
   {
-    id: "topic-2-3",
+    id: "face-2-3",
     userId: "user-2",
     name: "旅行記",
     emoji: "✈️",
@@ -74,7 +74,7 @@ const user2Faces: Face[] = [
 // user-3（鈴木 一郎）のフェイス
 const user3Faces: Face[] = [
   {
-    id: "topic-3-1",
+    id: "face-3-1",
     userId: "user-3",
     name: "ゲーム記録",
     emoji: "🎮",
@@ -83,7 +83,7 @@ const user3Faces: Face[] = [
     isPrivate: false,
   },
   {
-    id: "topic-3-2",
+    id: "face-3-2",
     userId: "user-3",
     name: "アニメ感想",
     emoji: "🎌",
@@ -92,7 +92,7 @@ const user3Faces: Face[] = [
     isPrivate: false,
   },
   {
-    id: "topic-3-3",
+    id: "face-3-3",
     userId: "user-3",
     name: "筋トレログ",
     emoji: "💪",
@@ -101,7 +101,7 @@ const user3Faces: Face[] = [
     isPrivate: false,
   },
   {
-    id: "topic-3-4",
+    id: "face-3-4",
     userId: "user-3",
     name: "技術メモ",
     emoji: "💻",
@@ -113,7 +113,7 @@ const user3Faces: Face[] = [
 // user-4（田中 美咲）のフェイス
 const user4Faces: Face[] = [
   {
-    id: "topic-4-1",
+    id: "face-4-1",
     userId: "user-4",
     name: "料理レシピ",
     emoji: "🥗",
@@ -122,7 +122,7 @@ const user4Faces: Face[] = [
     isPrivate: false,
   },
   {
-    id: "topic-4-2",
+    id: "face-4-2",
     userId: "user-4",
     name: "映画・ドラマ",
     emoji: "📺",
@@ -131,7 +131,7 @@ const user4Faces: Face[] = [
     isPrivate: false,
   },
   {
-    id: "topic-4-3",
+    id: "face-4-3",
     userId: "user-4",
     name: "植物育成",
     emoji: "🌿",
