@@ -10,7 +10,7 @@ type ScopeOption = {
 const SCOPE_OPTIONS: ScopeOption[] = [
   { value: "all", label: "全体" },
   { value: "mine", label: "自分" },
-  { value: "subscribed", label: "サブスク" },
+  { value: "subscribed", label: "サブスクフェイス" },
 ];
 
 type SearchScopeSelectorProps = {
@@ -20,7 +20,7 @@ type SearchScopeSelectorProps = {
 
 /**
  * 検索スコープ切り替えタブ。
- * 「全体 / 自分 / サブスク」の 3 種類から選択する。
+ * 「全体 / 自分 / サブスクフェイス」の 3 種類から選択する。
  */
 const SearchScopeSelector = ({
   scope,
