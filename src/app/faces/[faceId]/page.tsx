@@ -52,7 +52,7 @@ const FaceDetailPage = async ({ params }: Props) => {
       <main>
         {/* フェイスヘッダー（絵文字・名前・説明・サブスクボタン） */}
         <div className="border-b border-zinc-800">
-          <FaceHeader face={face} />
+          <FaceHeader face={face} isOwner={face.userId === currentUser.id} />
         </div>
 
         {/* アクティビティ一覧 */}

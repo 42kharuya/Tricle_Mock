@@ -7,9 +7,10 @@ import { cn } from "@/lib/utils";
 
 type FaceHeaderProps = {
   face: Face;
+  isOwner?: boolean;
 };
 
-const FaceHeader = ({ face }: FaceHeaderProps) => {
+const FaceHeader = ({ face, isOwner = false }: FaceHeaderProps) => {
   const [subscribed, setSubscribed] = useState(false);
 
   const handleSubscribe = () => {
@@ -49,18 +50,20 @@ const FaceHeader = ({ face }: FaceHeaderProps) => {
             {face.description && (
               <p className="max-w-xs text-sm text-white/80">{face.description}</p>
             )}
-            <button
-              type="button"
-              onClick={handleSubscribe}
-              className={cn(
-                "mt-1 rounded-full px-6 py-2 text-sm font-semibold transition-colors",
-                subscribed
-                  ? "bg-zinc-700 text-zinc-300 hover:bg-zinc-600"
-                  : "bg-violet-600 text-white hover:bg-violet-500",
-              )}
-            >
-              {subscribed ? "✓ サブスク中" : "サブスクする"}
-            </button>
+            {!isOwner && (
+              <button
+                type="button"
+                onClick={handleSubscribe}
+                className={cn(
+                  "mt-1 rounded-full px-6 py-2 text-sm font-semibold transition-colors",
+                  subscribed
+                    ? "bg-zinc-700 text-zinc-300 hover:bg-zinc-600"
+                    : "bg-violet-600 text-white hover:bg-violet-500",
+                )}
+              >
+                {subscribed ? "✓ サブスク中" : "サブスクする"}
+              </button>
+            )}
           </div>
         </div>
       ) : (
@@ -84,20 +87,22 @@ const FaceHeader = ({ face }: FaceHeaderProps) => {
               <p className="max-w-xs text-sm text-zinc-400">{face.description}</p>
             )}
           </div>
-          <div className="flex justify-center">
-            <button
-              type="button"
-              onClick={handleSubscribe}
-              className={cn(
-                "rounded-full px-6 py-2 text-sm font-semibold transition-colors",
-                subscribed
-                  ? "bg-zinc-700 text-zinc-300 hover:bg-zinc-600"
-                  : "bg-violet-600 text-white hover:bg-violet-500",
-              )}
-            >
-              {subscribed ? "✓ サブスク中" : "サブスクする"}
-            </button>
-          </div>
+          {!isOwner && (
+            <div className="flex justify-center">
+              <button
+                type="button"
+                onClick={handleSubscribe}
+                className={cn(
+                  "rounded-full px-6 py-2 text-sm font-semibold transition-colors",
+                  subscribed
+                    ? "bg-zinc-700 text-zinc-300 hover:bg-zinc-600"
+                    : "bg-violet-600 text-white hover:bg-violet-500",
+                )}
+              >
+                {subscribed ? "✓ サブスク中" : "サブスクする"}
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
