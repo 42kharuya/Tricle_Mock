@@ -1,14 +1,14 @@
 import { cn } from "@/lib/utils";
 
-type TopicChipProps = {
+type FaceChipProps = {
   title: string;
-  topicId: string;
+  faceId: string;
   className?: string;
 };
 
 /**
- * トピックIDの末尾数字をインデックスとしてカラーパレットから色を決定する。
- * 固定の色パレットを使うのでトピックごとに一貫した色が付く。
+ * フェイス ID の末尾数字をインデックスとしてカラーパレットから色を決定する。
+ * 固定の色パレットを使うのでフェイスごとに一貫した色が付く。
  */
 const COLOR_PALETTE = [
   "bg-violet-900/60 text-violet-300",
@@ -21,19 +21,19 @@ const COLOR_PALETTE = [
   "bg-orange-900/60 text-orange-300",
 ];
 
-const getColorClass = (topicId: string): string => {
+const getColorClass = (faceId: string): string => {
   // id 末尾の数字全部を合算して index を決める
-  const digits = topicId.replace(/\D/g, "");
+  const digits = faceId.replace(/\D/g, "");
   const sum = digits.split("").reduce((acc, d) => acc + parseInt(d, 10), 0);
   return COLOR_PALETTE[sum % COLOR_PALETTE.length];
 };
 
-const TopicChip = ({ title, topicId, className }: TopicChipProps) => {
+const FaceChip = ({ title, faceId, className }: FaceChipProps) => {
   return (
     <span
       className={cn(
         "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
-        getColorClass(topicId),
+        getColorClass(faceId),
         className,
       )}
     >
@@ -42,4 +42,4 @@ const TopicChip = ({ title, topicId, className }: TopicChipProps) => {
   );
 };
 
-export default TopicChip;
+export default FaceChip;

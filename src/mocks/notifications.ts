@@ -13,7 +13,7 @@ export const notifications: Notification[] = [
     id: "notif-1",
     type: "subscribe",
     fromUserId: "user-4",
-    faceId: "topic-1-1",
+    faceId: "face-1-1",
     createdAt: "2026-03-30T09:12:00+09:00",
   },
   {
@@ -27,7 +27,7 @@ export const notifications: Notification[] = [
     id: "notif-3",
     type: "subscribe",
     fromUserId: "user-3",
-    faceId: "topic-1-2",
+    faceId: "face-1-2",
     createdAt: "2026-03-25T14:00:00+09:00",
   },
   {
@@ -41,7 +41,7 @@ export const notifications: Notification[] = [
     id: "notif-5",
     type: "subscribe",
     fromUserId: "user-2",
-    faceId: "topic-1-1",
+    faceId: "face-1-1",
     createdAt: "2026-03-15T10:22:00+09:00",
   },
   {

@@ -5,11 +5,11 @@ import { Pencil } from "lucide-react";
 import PostModal from "@/components/ui/PostModal";
 
 type Props = {
-  /** モーダルを開いた時点で選択済みにするトピックID（省略可） */
-  defaultTopicId?: string;
+  /** モーダルを開いた時点で選択済みにするフェイスID（省略可） */
+  defaultFaceId?: string;
 };
 
-const FAB = ({ defaultTopicId }: Props) => {
+const FAB = ({ defaultFaceId }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpen = () => setIsModalOpen(true);
@@ -29,7 +29,7 @@ const FAB = ({ defaultTopicId }: Props) => {
       <PostModal
         isOpen={isModalOpen}
         onClose={handleClose}
-        defaultTopicId={defaultTopicId}
+        defaultFaceId={defaultFaceId}
       />
     </>
   );

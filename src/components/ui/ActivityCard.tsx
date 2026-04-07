@@ -7,15 +7,15 @@ import { type Activity } from "@/types/activity";
 import { type User } from "@/types/user";
 import Avatar from "./Avatar";
 import Badge from "./Badge";
-import TopicChip from "./TopicChip";
+import FaceChip from "./FaceChip";
 import { cn } from "@/lib/utils";
 
 type ActivityCardProps = {
   activity: Activity;
   user: User;
-  topicTitle: string;
-  /** トピックチップの色決定に使用 */
-  topicId: string;
+  faceTitle: string;
+  /** フェイスチップの色決定に使用 */
+  faceId: string;
   className?: string;
 };
 
@@ -46,8 +46,8 @@ const formatRelativeTime = (isoString: string): string => {
 const ActivityCard = ({
   activity,
   user,
-  topicTitle,
-  topicId,
+  faceTitle,
+  faceId,
   className,
 }: ActivityCardProps) => {
   const isLong = activity.body.length > COLLAPSE_THRESHOLD;
@@ -65,7 +65,7 @@ const ActivityCard = ({
         className,
       )}
     >
-      {/* ヘッダー: アバター・名前・バッジ・トピック・日時 */}
+      {/* ヘッダー: アバター・名前・バッジ・フェイス・日時 */}
       <div className="flex items-start gap-3">
         <Avatar src={user.avatarUrl} alt={user.name} size="md" />
         <div className="flex flex-1 flex-col gap-0.5 overflow-hidden">
@@ -74,10 +74,10 @@ const ActivityCard = ({
             {user.badge && <Badge emoji={user.badge} />}
           </div>
           <div className="flex items-center gap-2">
-            <Link href={`/topics/${topicId}`}>
-              <TopicChip
-                title={topicTitle}
-                topicId={topicId}
+            <Link href={`/faces/${faceId}`}>
+              <FaceChip
+                title={faceTitle}
+                faceId={faceId}
                 className="transition-opacity hover:opacity-80"
               />
             </Link>

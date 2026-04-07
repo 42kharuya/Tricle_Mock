@@ -37,8 +37,8 @@ const FaceActivityFeed = ({ face }: FaceActivityFeedProps) => {
             <UIActivityCard
               activity={activity}
               user={user}
-              topicTitle={faceTitle}
-              topicId={face.id}
+              faceTitle={faceTitle}
+              faceId={face.id}
             />
           </li>
         );

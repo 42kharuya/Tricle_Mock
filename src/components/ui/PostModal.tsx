@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { X, ChevronDown, ImagePlus } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { topics } from "@/mocks/topics";
+import { faceRepository } from "@/repositories/face-repository";
 
 // ログインユーザー（モック）
 const MY_USER_ID = "user-1";
@@ -17,21 +17,21 @@ type AttachedImage = {
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  /** モーダルを開いた時点で選択済みにするトピックID（省略可） */
-  defaultTopicId?: string;
+  /** モーダルを開いた時点で選択済みにするフェイスID（省略可） */
+  defaultFaceId?: string;
 };
 
-const PostModal = ({ isOpen, onClose, defaultTopicId }: Props) => {
-  const myTopics = topics.filter((t) => t.userId === MY_USER_ID);
-  const [selectedTopicId, setSelectedTopicId] = useState<string>(
-    defaultTopicId ?? myTopics[0]?.id ?? "",
+const PostModal = ({ isOpen, onClose, defaultFaceId }: Props) => {
+  const myFaces = faceRepository.listByUserId(MY_USER_ID);
+  const [selectedFaceId, setSelectedFaceId] = useState<string>(
+    defaultFaceId ?? myFaces[0]?.id ?? "",
   );
   const [text, setText] = useState("");
   const [images, setImages] = useState<AttachedImage[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const MAX_LENGTH = 5000;
 
-  const selectedTopic = myTopics.find((t) => t.id === selectedTopicId);
+  const selectedFace = myFaces.find((f) => f.id === selectedFaceId);
 
   // モーダルが閉じたら画像をリセット・objectURL を解放
   useEffect(() => {
@@ -104,28 +104,28 @@ const PostModal = ({ isOpen, onClose, defaultTopicId }: Props) => {
         </div>
 
         <div className="px-4 pb-6 flex flex-col gap-4">
-          {/* トピック選択 */}
+          {/* フェイス選択 */}
           <div className="flex flex-col gap-1.5">
             <label
-              htmlFor="topic-select"
+              htmlFor="face-select"
               className="text-xs font-medium text-zinc-400"
             >
-              トピック
+              フェイス
             </label>
             <div className="relative">
               <select
-                id="topic-select"
-                value={selectedTopicId}
-                onChange={(e) => setSelectedTopicId(e.target.value)}
+                id="face-select"
+                value={selectedFaceId}
+                onChange={(e) => setSelectedFaceId(e.target.value)}
                 className={cn(
                   "w-full appearance-none rounded-xl border border-zinc-700 bg-zinc-800 px-4 py-2.5 pr-10",
                   "text-sm text-zinc-100 outline-none transition-colors",
                   "focus:border-violet-500 focus:ring-1 focus:ring-violet-500/50",
                 )}
               >
-                {myTopics.map((topic) => (
-                  <option key={topic.id} value={topic.id}>
-                    {topic.emoji ? `${topic.emoji} ${topic.title}` : topic.title}
+                {myFaces.map((face) => (
+                  <option key={face.id} value={face.id}>
+                    {face.emoji ? `${face.emoji} ${face.name}` : face.name}
                   </option>
                 ))}
               </select>
@@ -134,9 +134,9 @@ const PostModal = ({ isOpen, onClose, defaultTopicId }: Props) => {
                 className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400"
               />
             </div>
-            {selectedTopic?.description && (
+            {selectedFace?.description && (
               <p className="text-xs text-zinc-500 leading-relaxed">
-                {selectedTopic.description}
+                {selectedFace.description}
               </p>
             )}
           </div>

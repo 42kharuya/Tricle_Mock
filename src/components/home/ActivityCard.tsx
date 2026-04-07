@@ -19,8 +19,8 @@ const ActivityCard = ({ activity, face, user }: Props) => {
     <UIActivityCard
       activity={activity}
       user={user}
-      topicTitle={faceTitle}
-      topicId={face.id}
+      faceTitle={faceTitle}
+      faceId={face.id}
     />
   );
 };
