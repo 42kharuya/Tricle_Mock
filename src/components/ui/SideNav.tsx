@@ -7,7 +7,7 @@ import {
   Home,
   Bell,
   Search,
-  User,
+  Rss,
   Layers,
   Pencil,
   type LucideIcon,
@@ -22,11 +22,11 @@ type NavItem = {
 };
 
 const NAV_ITEMS: NavItem[] = [
+  { href: "/faces", label: "フェイス", icon: Layers },
   { href: "/", label: "ホーム", icon: Home },
-  { href: "/subscriptions", label: "サブスク", icon: Bell },
-  { href: "/topics", label: "トピック", icon: Layers },
+  { href: "/subscriptions", label: "サブスク", icon: Rss },
+  { href: "/notifications", label: "通知", icon: Bell },
   { href: "/search", label: "検索", icon: Search },
-  { href: "/profile", label: "プロフィール", icon: User },
 ];
 
 const SideNav = () => {
