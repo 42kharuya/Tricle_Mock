@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Bell, Search, User, Layers, type LucideIcon } from "lucide-react";
+import { Home, Bell, Search, Rss, Layers, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type NavItem = {
@@ -12,11 +12,11 @@ type NavItem = {
 };
 
 const NAV_ITEMS: NavItem[] = [
+  { href: "/faces", label: "フェイス", icon: Layers },
   { href: "/", label: "ホーム", icon: Home },
-  { href: "/subscriptions", label: "サブスク", icon: Bell },
-  { href: "/topics", label: "トピック", icon: Layers },
+  { href: "/subscriptions", label: "サブスク", icon: Rss },
+  { href: "/notifications", label: "通知", icon: Bell },
   { href: "/search", label: "検索", icon: Search },
-  { href: "/profile", label: "プロフィール", icon: User },
 ];
 
 const BottomNav = () => {
