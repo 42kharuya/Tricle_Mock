@@ -81,19 +81,15 @@ const FaceDetail = ({ faceId }: FaceDetailProps) => {
             if (!activityUser) return null;
 
             return (
-              <div
+              <ActivityCard
                 key={activity.id}
-                className="cursor-pointer"
+                activity={activity}
+                user={activityUser}
+                faceTitle={faceTitle}
+                faceId={faceId}
+                priority={i === 0}
                 onClick={() => openActivity(activity.id)}
-              >
-                <ActivityCard
-                  activity={activity}
-                  user={activityUser}
-                  faceTitle={faceTitle}
-                  faceId={faceId}
-                  priority={i === 0}
-                />
-              </div>
+              />
             );
           })
         )}

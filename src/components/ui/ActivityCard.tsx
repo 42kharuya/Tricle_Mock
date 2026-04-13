@@ -20,6 +20,8 @@ type ActivityCardProps = {
   /** true のとき最初の画像を優先読み込み（LCP 対策） */
   priority?: boolean;
   className?: string;
+  /** クリック時のコールバック（DetailPanel 連携用） */
+  onClick?: () => void;
 };
 
 const COLLAPSE_THRESHOLD = 200;
@@ -31,6 +33,7 @@ const ActivityCard = ({
   faceId,
   priority = false,
   className,
+  onClick,
 }: ActivityCardProps) => {
   const isLong = activity.body.length > COLLAPSE_THRESHOLD;
   const [expanded, setExpanded] = useState(false);
@@ -42,8 +45,10 @@ const ActivityCard = ({
 
   return (
     <article
+      onClick={onClick}
       className={cn(
         "flex flex-col gap-3 rounded-2xl bg-zinc-800/60 p-4 transition hover:bg-zinc-800 hover:scale-[1.01] active:scale-[0.99]",
+        onClick && "cursor-pointer",
         className,
       )}
     >
