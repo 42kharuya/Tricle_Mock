@@ -35,7 +35,9 @@ const TopBar = ({ pageTitle }: TopBarProps) => {
         </button>
       </header>
 
-      <PostModal isOpen={isPostModalOpen} onClose={handleClose} />
+      {isPostModalOpen && (
+        <PostModal isOpen={isPostModalOpen} onClose={handleClose} />
+      )}
     </>
   );
 };
