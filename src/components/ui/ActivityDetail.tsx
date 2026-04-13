@@ -49,6 +49,8 @@ const ActivityDetail = ({ activityId }: ActivityDetailProps) => {
         <div className="sticky top-0 flex items-center justify-between border-b border-zinc-800 bg-zinc-950/80 px-4 py-3 backdrop-blur-sm">
           <h2 className="text-sm font-semibold text-zinc-400">アクティビティ詳細</h2>
           <button
+            type="button"
+            aria-label="閉じる"
             onClick={close}
             className="flex h-8 w-8 items-center justify-center rounded-full text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100"
           >
@@ -75,6 +77,8 @@ const ActivityDetail = ({ activityId }: ActivityDetailProps) => {
       <div className="sticky top-0 flex items-center justify-between border-b border-zinc-800 bg-zinc-950/80 px-4 py-3 backdrop-blur-sm">
         <h2 className="text-sm font-semibold text-zinc-400">アクティビティ詳細</h2>
         <button
+          type="button"
+          aria-label="閉じる"
           onClick={close}
           className="flex h-8 w-8 items-center justify-center rounded-full text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100"
         >
