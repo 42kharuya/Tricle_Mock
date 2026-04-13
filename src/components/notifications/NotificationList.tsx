@@ -1,3 +1,5 @@
+"use client";
+
 import Avatar from "@/components/ui/Avatar";
 import { notificationRepository } from "@/repositories/notification-repository";
 import { userRepository } from "@/repositories/user-repository";
@@ -6,6 +8,8 @@ import { activityRepository } from "@/repositories/activity-repository";
 import { type Notification } from "@/types/notification";
 import { type User } from "@/types/user";
 import { formatRelativeTime } from "@/lib/format-relative-time";
+import { cn } from "@/lib/utils";
+import { useDetailPanel } from "@/lib/detail-panel-context";
 
 // ─── 通知アイテム ──────────────────────────────────────────────
 
@@ -15,6 +19,8 @@ type NotificationItemProps = {
   detail: string;
   /** リンク通知の場合のアクティビティ本文スニペット（任意） */
   activitySnippet?: string;
+  /** リンク通知の場合の紐づくアクティビティID */
+  activityId?: string;
 };
 
 const NotificationItem = ({
@@ -22,11 +28,27 @@ const NotificationItem = ({
   fromUser,
   detail,
   activitySnippet,
+  activityId,
 }: NotificationItemProps) => {
+  const { openActivity, state } = useDetailPanel();
   const isLink = notification.type === "link";
 
+  const isSelected =
+    state.type === "activity" && activityId !== undefined && state.activityId === activityId;
+
+  const handleClick = () => {
+    if (activityId) openActivity(activityId);
+  };
+
   return (
-    <li className="flex gap-3 rounded-2xl bg-zinc-800/60 p-4 transition hover:bg-zinc-800">
+    <li
+      onClick={handleClick}
+      className={cn(
+        "flex gap-3 rounded-2xl bg-zinc-800/60 p-4 transition",
+        activityId && "md:cursor-pointer hover:bg-zinc-800",
+        isSelected && "ring-1 ring-violet-500/40 bg-zinc-800",
+      )}
+    >
       {/* アバター */}
       <div className="shrink-0">
         <Avatar src={fromUser.avatarUrl} alt={fromUser.name} size="md" />
@@ -65,8 +87,9 @@ const NotificationItem = ({
 // ─── NotificationList ──────────────────────────────────────────
 
 /**
- * 通知一覧コンポーネント（Server Component）。
+ * 通知一覧コンポーネント（Client Component）。
  * notificationRepository から全通知を取得し、時系列降順で表示する。
+ * リンク通知のアイテムをクリックすると DetailPanel に紐づくアクティビティを表示する。
  */
 const NotificationList = () => {
   const notifications = notificationRepository.listAll();
@@ -104,6 +127,7 @@ const NotificationList = () => {
               fromUser={fromUser}
               detail={detail}
               activitySnippet={activity?.body}
+              activityId={notification.activityId}
             />
           );
         }
