@@ -1,7 +1,11 @@
+"use client";
+
 import { type Activity } from "@/types/activity";
 import { type User } from "@/types/user";
 import { type Face } from "@/types/face";
 import ActivityCard from "@/components/ui/ActivityCard";
+import { cn } from "@/lib/utils";
+import { useDetailPanel } from "@/lib/detail-panel-context";
 
 type ActivityResultItem = {
   activity: Activity;
@@ -28,6 +32,7 @@ const SearchResults = ({
   faceResults,
   subscribedFaceIds,
 }: SearchResultsProps) => {
+  const { state, openActivity, openFace } = useDetailPanel();
   if (!query) {
     return (
       <div className="flex flex-col items-center gap-3 py-20 text-center">
@@ -70,10 +75,19 @@ const SearchResults = ({
           <ul className="flex flex-col gap-2">
             {faceResults.map((face) => {
               const isSubscribed = subscribedFaceIds.includes(face.id);
+              const isSelected = state.type === "face" && state.faceId === face.id;
               return (
                 <li
                   key={face.id}
-                  className="flex items-center justify-between gap-3 rounded-2xl bg-zinc-800/60 px-4 py-3 transition hover:bg-zinc-800"
+                  onClick={() => {
+                    if (window.innerWidth >= 768) openFace(face.id);
+                  }}
+                  className={cn(
+                    "flex items-center justify-between gap-3 rounded-2xl bg-zinc-800/60 px-4 py-3 transition md:cursor-pointer",
+                    isSelected
+                      ? "ring-1 ring-violet-500/40 bg-zinc-800"
+                      : "hover:bg-zinc-800",
+                  )}
                 >
                   <div className="flex min-w-0 items-center gap-3">
                     {face.emoji && (
@@ -127,6 +141,7 @@ const SearchResults = ({
                   user={user}
                   faceTitle={`${face.emoji ?? ""} ${face.name}`.trim()}
                   faceId={face.id}
+                  onClick={() => openActivity(activity.id)}
                 />
               </li>
             ))}
