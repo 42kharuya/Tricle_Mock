@@ -32,6 +32,13 @@ const DetailPanelPlaceholder = ({
 const DetailPanel = () => {
   const { state } = useDetailPanel();
 
+  const contentKey =
+    state.type === "activity"
+      ? `activity-${state.activityId}`
+      : state.type === "face"
+        ? `face-${state.faceId}`
+        : "none";
+
   const renderContent = () => {
     switch (state.type) {
       case "activity":
@@ -49,8 +56,10 @@ const DetailPanel = () => {
   };
 
   return (
-    <aside className="hidden md:flex flex-col w-96 shrink-0 overflow-y-auto h-[calc(100vh-3rem)]">
-      {renderContent()}
+    <aside className="hidden md:flex flex-col w-96 shrink-0 overflow-y-auto">
+      <div key={contentKey} className="flex flex-col flex-1">
+        {renderContent()}
+      </div>
     </aside>
   );
 };
