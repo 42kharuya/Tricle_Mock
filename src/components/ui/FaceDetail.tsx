@@ -41,6 +41,7 @@ const FaceDetail = ({ faceId }: FaceDetailProps) => {
 
   const activities = activityRepository.listByFaceId(faceId);
   const user = userRepository.findById(face.userId);
+  const userMap = new Map(userRepository.listAll().map((u) => [u.id, u]));
   const isOwner = face.userId === currentUser.id;
   const faceTitle = [face.emoji, face.name]
     .filter((value): value is string => Boolean(value && value.trim()))
@@ -77,7 +78,7 @@ const FaceDetail = ({ faceId }: FaceDetailProps) => {
           <p className="text-sm text-zinc-600">まだアクティビティがありません</p>
         ) : (
           activities.map((activity, i) => {
-            const activityUser = userRepository.findById(activity.userId) ?? user;
+            const activityUser = userMap.get(activity.userId) ?? user;
             if (!activityUser) return null;
 
             return (

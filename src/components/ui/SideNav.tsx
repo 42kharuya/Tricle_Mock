@@ -9,6 +9,7 @@ import FaceNavItem from "@/components/ui/FaceNavItem";
 import CreateFaceModal from "@/components/face/CreateFaceModal";
 import { faceRepository } from "@/repositories/face-repository";
 import { userRepository } from "@/repositories/user-repository";
+import { useDetailPanel } from "@/lib/detail-panel-context";
 import type { Face } from "@/types/face";
 
 type NavItem = {
@@ -31,6 +32,7 @@ const SideNav = () => {
 
   const currentUser = userRepository.getCurrentUser();
   const faces = faceRepository.listByUserId(currentUser.id);
+  const { openFace } = useDetailPanel();
 
   // パス名からアクティブなフェイスIDを導出
   const activeFaceId = pathname.startsWith("/faces/")
@@ -46,6 +48,7 @@ const SideNav = () => {
 
   const handleFaceNavItemClick = (face: Face) => {
     router.push(`/faces/${face.id}`);
+    openFace(face.id);
   };
 
   return (
