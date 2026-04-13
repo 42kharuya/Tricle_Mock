@@ -3,6 +3,8 @@ import { Geist } from "next/font/google";
 import "./globals.css";
 import BottomNav from "@/components/ui/BottomNav";
 import SideNav from "@/components/ui/SideNav";
+import TopBar from "@/components/ui/TopBar";
+import DetailPanel from "@/components/ui/DetailPanel";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,12 +28,19 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
     >
       <body className="min-h-full bg-zinc-950 text-zinc-100">
-        {/* PC: SideNav + メインコンテンツの2カラム、モバイル: max-w-sm 中央寄せ */}
-        <div className="mx-auto max-w-sm md:max-w-4xl flex min-h-screen">
+        {/* PC: SideNav（左）+ TopBar / MainColumn / DetailPanel（右）の3カラム */}
+        {/* モバイル: BottomNav + 1カラム */}
+        <div className="flex min-h-screen w-full">
           <SideNav />
-          <main className="flex-1 min-w-0 pb-16 md:pb-0 md:border-x md:border-zinc-800">
-            {children}
-          </main>
+          <div className="flex flex-col flex-1 min-w-0">
+            <TopBar />
+            <div className="flex flex-1 overflow-hidden">
+              <main className="flex-1 min-w-0 overflow-y-auto border-r border-zinc-800 pb-16 md:pb-0">
+                {children}
+              </main>
+              <DetailPanel />
+            </div>
+          </div>
         </div>
         <BottomNav />
       </body>
