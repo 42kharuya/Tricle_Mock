@@ -188,8 +188,63 @@ const SeedRow = ({
           </div>
         )}
 
-        {/* リンク数 */}
-        {linkedCount > 0 && !showActions && (
+        {/* アクション行 or リンク数表示 */}
+        {showActions ? (
+          <div
+            style={{
+              marginTop: 10,
+              display: "flex",
+              alignItems: "center",
+              gap: 16,
+            }}
+          >
+            {linkedCount > 0 && (
+              <button
+                type="button"
+                onClick={(e) => e.stopPropagation()}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 5,
+                  fontSize: 12,
+                  color: "var(--mf-text-muted)",
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                  cursor: "pointer",
+                  fontFamily: "var(--mf-font-sans)",
+                }}
+              >
+                <svg width={14} height={14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M6.5 9.5a3.54 3.54 0 005 0l2-2a3.54 3.54 0 00-5-5l-1 1" />
+                  <path d="M9.5 6.5a3.54 3.54 0 00-5 0l-2 2a3.54 3.54 0 005 5l1-1" />
+                </svg>
+                <span>{linkedCount}</span>
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 5,
+                fontSize: 12,
+                color: "var(--mf-text-muted)",
+                background: "none",
+                border: "none",
+                padding: 0,
+                cursor: "pointer",
+                fontFamily: "var(--mf-font-sans)",
+              }}
+            >
+              <svg width={14} height={14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+                <path d="M11 2a1.414 1.414 0 012 2L5 12l-3 1 1-3L11 2z" />
+              </svg>
+              <span>編集</span>
+            </button>
+          </div>
+        ) : linkedCount > 0 ? (
           <div
             style={{
               marginTop: 10,
@@ -206,19 +261,16 @@ const SeedRow = ({
               whiteSpace: "nowrap",
             }}
           >
+            <svg width={12} height={12} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+              <path d="M6.5 9.5a3.54 3.54 0 005 0l2-2a3.54 3.54 0 00-5-5l-1 1" />
+              <path d="M9.5 6.5a3.54 3.54 0 00-5 0l-2 2a3.54 3.54 0 005 5l1-1" />
+            </svg>
             <span>
-              <b
-                style={{
-                  color: "var(--mf-text)",
-                  fontWeight: 600,
-                }}
-              >
-                {linkedCount}
-              </b>{" "}
+              <b style={{ color: "var(--mf-text)", fontWeight: 600 }}>{linkedCount}</b>{" "}
               件のリンク
             </span>
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import "./globals.css";
 import BottomNav from "@/components/ui/BottomNav";
 import SideNav from "@/components/ui/SideNav";
 import TopBar from "@/components/ui/TopBar";
+import AppHeader from "@/components/ui/AppHeader";
 import ContextRail from "@/components/ui/ContextRail";
 import { DetailPanelProvider } from "@/lib/detail-panel-context";
 
@@ -31,6 +32,7 @@ export default function RootLayout({
           <div className="flex h-screen w-full overflow-hidden">
             <SideNav />
             <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+              <AppHeader />
               <TopBar />
               <div className="flex flex-1 min-h-0 overflow-hidden">
                 <main

@@ -1,16 +1,17 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import type { Face } from "@/types/face";
-import FaceBadge from "@/components/ui/FaceBadge";
-import { getFaceTitle } from "@/lib/display";
+import { getFaceTitle, getFaceColor, getFaceKanji } from "@/lib/display";
+import { activityRepository } from "@/repositories/activity-repository";
 import CreateFaceModal from "./CreateFaceModal";
 
 type Props = {
   initialFaces: Face[];
 };
+
+const REFERENCE_DATE = new Date("2026-04-01");
 
 const FacesClient = ({ initialFaces }: Props) => {
   const [faces, setFaces] = useState<Face[]>(initialFaces);
@@ -19,6 +20,24 @@ const FacesClient = ({ initialFaces }: Props) => {
   const handleCreate = (newFace: Face) => {
     setFaces((prev) => [newFace, ...prev]);
   };
+
+  // フェイスごとの統計を事前計算
+  const faceStats = useMemo(() => {
+    const allActivities = activityRepository.listAll();
+    const thisMonth = REFERENCE_DATE.toISOString().slice(0, 7); // "2026-04"
+    const stats = new Map<string, { total: number; monthly: number; lastDate: string | null }>();
+    for (const face of faces) {
+      const faceActivities = allActivities.filter((a) => a.faceId === face.id);
+      const monthly = faceActivities.filter((a) => a.createdAt.startsWith(thisMonth)).length;
+      const sorted = [...faceActivities].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+      stats.set(face.id, {
+        total: faceActivities.length,
+        monthly,
+        lastDate: sorted[0]?.createdAt.slice(0, 10) ?? null,
+      });
+    }
+    return stats;
+  }, [faces]);
 
   return (
     <main style={{ display: "flex", flexDirection: "column", paddingBottom: 24 }}>
@@ -61,59 +80,57 @@ const FacesClient = ({ initialFaces }: Props) => {
             gap: 14,
           }}
         >
-          {faces.map((face) => (
-            <Link
-              key={face.id}
-              href={`/faces/${face.id}`}
-              style={{ textDecoration: "none" }}
-            >
-              <div
-                style={{
-                  borderRadius: 14,
-                  overflow: "hidden",
-                  background: "var(--mf-surface)",
-                  border: "0.5px solid var(--mf-line)",
-                  transition: "box-shadow 0.15s",
-                  cursor: "pointer",
-                }}
+          {faces.map((face) => {
+            const color = getFaceColor(face.id);
+            const kanji = getFaceKanji(getFaceTitle(face));
+            const stats = faceStats.get(face.id);
+            return (
+              <Link
+                key={face.id}
+                href={`/faces/${face.id}`}
+                style={{ textDecoration: "none" }}
               >
-                {/* カバー画像 or FaceBadgeフォールバック */}
-                {face.imageUrl ? (
-                  <div style={{ position: "relative", aspectRatio: "16/10" }}>
-                    <Image
-                      src={face.imageUrl}
-                      alt={face.name}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 50vw, 200px"
-                    />
-                  </div>
-                ) : (
+                <div
+                  style={{
+                    borderRadius: 14,
+                    overflow: "hidden",
+                    background: "var(--mf-surface)",
+                    border: "0.5px solid var(--mf-line)",
+                    cursor: "pointer",
+                  }}
+                >
+                  {/* カラーバンド (56px) */}
                   <div
                     style={{
-                      aspectRatio: "16/10",
+                      height: 56,
+                      background: color,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      background: "var(--mf-surface-tint)",
                     }}
                   >
-                    <FaceBadge face={face} size={48} radius={13} />
+                    <div
+                      style={{
+                        width: 30,
+                        height: 30,
+                        borderRadius: 8,
+                        background: "rgba(255,255,255,0.22)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontFamily: "var(--mf-font-serif)",
+                        fontSize: 16,
+                        fontWeight: 600,
+                        color: "#fff",
+                      }}
+                    >
+                      {kanji}
+                    </div>
                   </div>
-                )}
 
-                {/* カード本文 */}
-                <div style={{ padding: "10px 12px 12px" }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 6,
-                      marginBottom: 4,
-                    }}
-                  >
-                    <FaceBadge face={face} size={20} radius={5} />
-                    <span
+                  {/* カード本文 */}
+                  <div style={{ padding: "10px 12px 12px" }}>
+                    <div
                       style={{
                         fontSize: 13,
                         fontWeight: 700,
@@ -121,54 +138,83 @@ const FacesClient = ({ initialFaces }: Props) => {
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                         whiteSpace: "nowrap",
+                        marginBottom: 8,
                       }}
                     >
                       {getFaceTitle(face)}
-                    </span>
+                    </div>
+
+                    {/* 統計行 */}
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        marginBottom: 6,
+                      }}
+                    >
+                      <span style={{ fontSize: 11, color: "var(--mf-text-sub)" }}>
+                        <b style={{ color: "var(--mf-text)", fontWeight: 700, fontSize: 13 }}>
+                          {stats?.total ?? 0}
+                        </b>{" "}
+                        シード
+                      </span>
+                      {stats && stats.monthly > 0 && (
+                        <span
+                          style={{
+                            fontSize: 10,
+                            color: "var(--mf-accent)",
+                            fontWeight: 600,
+                            background: "rgba(212,146,42,0.1)",
+                            padding: "2px 6px",
+                            borderRadius: 999,
+                          }}
+                        >
+                          +{stats.monthly}/月
+                        </span>
+                      )}
+                    </div>
+
+                    {/* 最終投稿日 */}
+                    {stats?.lastDate && (
+                      <div
+                        style={{
+                          fontSize: 10,
+                          color: "var(--mf-text-faint)",
+                        }}
+                      >
+                        最終: {stats.lastDate.replace(/-/g, "/")}
+                      </div>
+                    )}
+
+                    {face.isPrivate && (
+                      <span
+                        style={{
+                          marginTop: 6,
+                          display: "inline-block",
+                          padding: "2px 8px",
+                          borderRadius: 999,
+                          background: "var(--mf-surface-tint)",
+                          fontSize: 10,
+                          color: "var(--mf-text-muted)",
+                          fontWeight: 600,
+                        }}
+                      >
+                        非公開
+                      </span>
+                    )}
                   </div>
-                  {face.description && (
-                    <p
-                      style={{
-                        fontSize: 11.5,
-                        lineHeight: 1.6,
-                        color: "var(--mf-text-sub)",
-                        overflow: "hidden",
-                        display: "-webkit-box",
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: "vertical",
-                        margin: 0,
-                      }}
-                    >
-                      {face.description}
-                    </p>
-                  )}
-                  {face.isPrivate && (
-                    <span
-                      style={{
-                        marginTop: 6,
-                        display: "inline-block",
-                        padding: "2px 8px",
-                        borderRadius: 999,
-                        background: "var(--mf-surface-tint)",
-                        fontSize: 10,
-                        color: "var(--mf-text-muted)",
-                        fontWeight: 600,
-                      }}
-                    >
-                      非公開
-                    </span>
-                  )}
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
 
           {/* 新規フェイス作成カード */}
           <button
             type="button"
             onClick={() => setIsModalOpen(true)}
             style={{
-              height: 156,
+              minHeight: 130,
               borderRadius: 14,
               border: "1.5px dashed var(--mf-line)",
               display: "flex",

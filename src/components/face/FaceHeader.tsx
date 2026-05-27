@@ -5,14 +5,40 @@ import { useState } from "react";
 import { type Face } from "@/types/face";
 import FaceBadge from "@/components/ui/FaceBadge";
 import { getFaceTitle } from "@/lib/display";
+import { activityRepository } from "@/repositories/activity-repository";
+import { subscriptionRepository } from "@/repositories/subscription-repository";
+
+export type SortOrder = "newest" | "oldest" | "images";
 
 type FaceHeaderProps = {
   face: Face;
   isOwner?: boolean;
+  onSortChange?: (sort: SortOrder) => void;
 };
 
-const FaceHeader = ({ face, isOwner = false }: FaceHeaderProps) => {
-  const [subscribed, setSubscribed] = useState(false);
+const REFERENCE_DATE = "2026-04";
+
+const FaceHeader = ({ face, isOwner = false, onSortChange }: FaceHeaderProps) => {
+  const [subscribed, setSubscribed] = useState(() =>
+    subscriptionRepository.getSubscribedFaceIds().includes(face.id)
+  );
+  const [sort, setSort] = useState<SortOrder>("newest");
+
+  const faceActivities = activityRepository.listByFaceId(face.id);
+  const totalSeeds = faceActivities.length;
+  const monthlySeeds = faceActivities.filter((a) => a.createdAt.startsWith(REFERENCE_DATE)).length;
+  const subscriberCount = 12; // モック値
+
+  const handleSort = (s: SortOrder) => {
+    setSort(s);
+    onSortChange?.(s);
+  };
+
+  const SORT_LABELS: { key: SortOrder; label: string }[] = [
+    { key: "newest", label: "新しい順" },
+    { key: "oldest", label: "古い順" },
+    { key: "images", label: "画像あり" },
+  ];
 
   return (
     <div>
@@ -101,7 +127,7 @@ const FaceHeader = ({ face, isOwner = false }: FaceHeaderProps) => {
             flexDirection: "column",
             alignItems: "center",
             gap: 12,
-            padding: "28px 24px",
+            padding: "28px 24px 20px",
             textAlign: "center",
           }}
         >
@@ -164,6 +190,78 @@ const FaceHeader = ({ face, isOwner = false }: FaceHeaderProps) => {
           )}
         </div>
       )}
+
+      {/* 統計行 */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 24,
+          padding: "12px 24px",
+          borderBottom: "0.5px solid var(--mf-line)",
+        }}
+      >
+        <div style={{ textAlign: "center" }}>
+          <div style={{ fontSize: 17, fontWeight: 700, color: "var(--mf-brand)" }}>
+            {totalSeeds}
+          </div>
+          <div style={{ fontSize: 10.5, color: "var(--mf-text-muted)", marginTop: 1 }}>シード</div>
+        </div>
+        <div style={{ width: 0.5, height: 28, background: "var(--mf-line)" }} />
+        <div style={{ textAlign: "center" }}>
+          <div style={{ fontSize: 17, fontWeight: 700, color: "var(--mf-brand)" }}>
+            {monthlySeeds}
+          </div>
+          <div style={{ fontSize: 10.5, color: "var(--mf-text-muted)", marginTop: 1 }}>今月</div>
+        </div>
+        {!isOwner && (
+          <>
+            <div style={{ width: 0.5, height: 28, background: "var(--mf-line)" }} />
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: 17, fontWeight: 700, color: "var(--mf-brand)" }}>
+                {subscriberCount}
+              </div>
+              <div style={{ fontSize: 10.5, color: "var(--mf-text-muted)", marginTop: 1 }}>サブスク</div>
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* ソートピル */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          padding: "10px 16px",
+          borderBottom: "0.5px solid var(--mf-line)",
+          overflowX: "auto",
+        }}
+        className="mf-scroll"
+      >
+        {SORT_LABELS.map(({ key, label }) => (
+          <button
+            key={key}
+            type="button"
+            onClick={() => handleSort(key)}
+            style={{
+              padding: "5px 14px",
+              borderRadius: 999,
+              fontSize: 12,
+              fontWeight: sort === key ? 700 : 400,
+              background: sort === key ? "var(--mf-brand)" : "var(--mf-surface-tint)",
+              color: sort === key ? "#fff" : "var(--mf-text-sub)",
+              border: "none",
+              cursor: "pointer",
+              whiteSpace: "nowrap",
+              flexShrink: 0,
+            }}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
