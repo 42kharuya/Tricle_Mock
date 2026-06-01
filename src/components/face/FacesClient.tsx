@@ -76,10 +76,35 @@ const FacesClient = ({ initialFaces }: Props) => {
     name: "名前順",
   };
 
+  const totalSeeds = useMemo(
+    () => Array.from(faceStats.values()).reduce((sum, s) => sum + s.total, 0),
+    [faceStats]
+  );
+
   return (
     <main style={{ display: "flex", flexDirection: "column", paddingBottom: 24 }}>
+      {/* ページタイトル */}
+      <div style={{ padding: "4px 18px 14px" }}>
+        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between" }}>
+          <div
+            style={{
+              fontSize: 22,
+              fontWeight: 700,
+              color: "var(--mf-brand)",
+              letterSpacing: -0.3,
+              fontFamily: "var(--mf-font-sans)",
+            }}
+          >
+            振り返り
+          </div>
+          <div style={{ fontSize: 12, color: "var(--mf-text-sub)", fontWeight: 500 }}>
+            {faces.length} フェイス · {totalSeeds} シード
+          </div>
+        </div>
+      </div>
+
       {/* 検索バー */}
-      <div style={{ padding: "12px 20px 8px" }}>
+      <div style={{ padding: "0 18px 8px" }}>
         <div
           style={{
             display: "flex",
