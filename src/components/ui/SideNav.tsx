@@ -8,6 +8,7 @@ import FaceBadge from "@/components/ui/FaceBadge";
 import FaceNavItem from "@/components/ui/FaceNavItem";
 import AccountMenu from "@/components/ui/AccountMenu";
 import CreateFaceModal from "@/components/face/CreateFaceModal";
+import PostModal from "@/components/ui/PostModal";
 import { faceRepository } from "@/repositories/face-repository";
 import { userRepository } from "@/repositories/user-repository";
 import { notificationRepository } from "@/repositories/notification-repository";
@@ -64,6 +65,7 @@ const SideNav = () => {
   const pathname = usePathname();
   const router = useRouter();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const currentUser = userRepository.getCurrentUser();
@@ -179,7 +181,7 @@ const SideNav = () => {
         {/* 投稿ボタン */}
         <button
           type="button"
-          onClick={() => {}}
+          onClick={() => setIsPostModalOpen(true)}
           style={{
             marginTop: 18,
             padding: "13px 16px",
@@ -328,6 +330,11 @@ const SideNav = () => {
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
         onCreate={() => setIsCreateModalOpen(false)}
+      />
+
+      <PostModal
+        isOpen={isPostModalOpen}
+        onClose={() => setIsPostModalOpen(false)}
       />
     </>
   );
